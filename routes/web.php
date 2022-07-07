@@ -16,17 +16,25 @@ use App\Http\Controllers\UserController;
 |
 */
 
+
+//Kayıt ve giriş
 Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/login', [UserController::class, 'loginPost'])->name('login.post');
 Route::get('/register', [UserController::class, 'register'])->name('register');
 Route::post('/register', [UserController::class, 'registerPost'])->name('register.post');
+Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
-
-
+//Tüm kullanıcı işlemleri
 Route::get('/', [BookController::class, 'index'])->name('book.index');
-Route::get('/create', [BookController::class, 'create'])->name('book.create');
-Route::post('/create', [BookController::class, 'store']);
 Route::get('/show/{id}', [BookController::class, 'show'])->name('book.show');
-Route::get('/edit/{id}', [BookController::class, 'edit'])->name('book.edit');
-Route::post('/edit/{id}', [BookController::class, 'update']);
-Route::get('/destroy/{id}', [BookController::class, 'destroy'])->name('book.destroy');
+
+//Giriş yapan kullanıcı işlemleri
+Route::middleware('auth')->group(function () {
+    Route::get('/create', [BookController::class, 'create'])->name('book.create');
+    Route::post('/create', [BookController::class, 'store']);
+    Route::get('/edit/{id}', [BookController::class, 'edit'])->name('book.edit');
+    Route::post('/edit/{id}', [BookController::class, 'update']);
+    Route::get('/destroy/{id}', [BookController::class, 'destroy'])->name('book.destroy');
+});
+
+

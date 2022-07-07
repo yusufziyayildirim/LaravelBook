@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -33,7 +34,21 @@ class UserController extends Controller
     }
     public function registerPost(Request $request)
     {
-        dd($request->post());
+        // dd($request->post());
+      
+        // $validated = $request->validate([
+        //     'name' => ['required', 'string', 'max:255'],
+        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //     'password' => ['required', 'string', 'min:8', 'confirmed'],
+        // ]);
+
+       
+        $user = new User();
+        $data = $this->prepare($request, $user->getFillable());
+        $user->fill($data);
+        $user->password = Hash::make($user->password);
+        $user->save();
+        return redirect()->route('book.index');
     
     }
 
